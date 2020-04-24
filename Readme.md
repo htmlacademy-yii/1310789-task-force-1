@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Владимир Борисенко](https://up.htmlacademy.ru/yii/1/user/1310789).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Арбузов](https://htmlacademy.ru/profile/arbualex).
 
 ---
 
