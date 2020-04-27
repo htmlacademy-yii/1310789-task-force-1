@@ -1,0 +1,17 @@
+{
+    "name": "vb/task-force",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Uladzimir Barysenka",
+            "email": "vovaborisenko@live.com"
+        }
+    ],
+    "description": "Freelance platform",
+    "require": {},
+    "autoload": {
+      "psr-4": {
+        "taskforce\\": "src/"
+      }
+    }
+}
