@@ -1,5 +1,7 @@
 <?php
 
+namespace taskforce\core;
+
 class Task {
 
 	const STATUS_NEW		= 'new'; 		// Задание опубликовано, исполнитель ещё не найден
@@ -16,7 +18,7 @@ class Task {
 	private $current_status = self::STATUS_NEW;
 
 	private $customer_id;
-	
+
 	private $freelancer_id;
 
 	public function __construct($customer_id, $freelancer_id)
