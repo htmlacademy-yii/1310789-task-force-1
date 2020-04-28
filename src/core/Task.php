@@ -30,9 +30,9 @@ class Task {
 	/**
 	 * Выводит текущий статус задания
 	 * 
-	 * @return статус
+	 * @return string
 	 */
-	public function getStatus()
+	public function getStatus():string
 	{
 		return $this->current_status;
 	}
@@ -42,11 +42,13 @@ class Task {
 	 * 
 	 * @param $value статус
 	 * 
-	 * @return статус
+	 * @return Task
 	 */
-	public function setStatus($value)
+	public function setStatus($value): Task
 	{
-		return $this->current_status = $value;
+		$this->current_status = $value;
+
+		return $this;
 	}
 
 	/**
@@ -54,7 +56,7 @@ class Task {
 	 * 
 	 * @return array
 	 */
-	public function getStatusMap()
+	public function getStatusMap(): array
 	{
 		return [
 			self::STATUS_NEW 		=> 'Новое',
@@ -70,7 +72,7 @@ class Task {
 	 * 
 	 * @return array
 	 */	
-	public function getActionMap()
+	public function getActionMap(): array
 	{
 		return [
 			self::ACTION_CANCEL 	=> 'Отменить',
@@ -85,25 +87,17 @@ class Task {
 	 * 
 	 * @param $action действие
 	 * 
-	 * @return статус или null, если после действия статус не поменяется
+	 * @return string|null, если после действия статус не поменяется
 	 */
-	public function getNextStatus($action)
+	public function getNextStatus($action): ?string
 	{
-		switch ($action) {
-			case self::ACTION_CANCEL:
+		$action_status = [
+			self::ACTION_CANCEL => self::STATUS_CANCELED,
+			self::ACTION_APPLY => self::STATUS_DONE,
+			self::ACTION_FAIL => self::STATUS_FAILED,
+		];
 
-				return self::STATUS_CANCELED;
-
-			case self::ACTION_APPLY:
-
-				return self::STATUS_DONE;
-			
-			case self::ACTION_FAIL:
-
-				return self::STATUS_FAILED;
-		}
-
-		return null;
+		return $action_status[$action] ?? null;
 	}
 
 	/**
@@ -111,9 +105,9 @@ class Task {
 	 * 
 	 * @param $user_id id пользователя
 	 * 
-	 * @return действие
+	 * @return string
 	 */
-	public function getActionList($user_id)
+	public function getActionList($user_id): string
 	{
 		if ($this->isCustomer($user_id)) {
 
@@ -133,7 +127,7 @@ class Task {
 	 * 
 	 * @return bool
 	 */
-	private function isCustomer($user_id)
+	private function isCustomer($user_id): bool
 	{
 		return $user_id == $this->customer_id;
 	}
@@ -145,7 +139,7 @@ class Task {
 	 * 
 	 * @return bool
 	 */
-	private function isFreelancer($user_id)
+	private function isFreelancer($user_id): bool
 	{
 		return $user_id == $this->freelancer_id;
 	}
@@ -153,36 +147,30 @@ class Task {
 	/**
 	 * Выводит возможное действие для заказчика
 	 * 
-	 * @return действие
+	 * @return string|null
 	 */
-	private function getCustomerActionList()
+	private function getCustomerActionList(): ?string
 	{
-		switch ($this->current_status) {
-			case self::STATUS_NEW:
+		$customer_actions = [
+			self::STATUS_NEW => self::ACTION_CANCEL,
+			self::STATUS_IN_WORK => self::ACTION_APPLY,
+		];
 
-				return self::ACTION_CANCEL;
-			
-			case self::STATUS_IN_WORK:
-
-				return self::ACTION_APPLY;
-		}
+		return $customer_actions[$this->current_status] ?? null;
 	}
 
 	/**
 	 * Выводит возможное действие для фрилансера
 	 * 
-	 * @return действие
+	 * @return string|null
 	 */
-	private function getFreelancerActionList()
+	private function getFreelancerActionList(): ?string
 	{
-		switch ($this->current_status) {
-			case self::STATUS_NEW:
+		$freelancer_actions = [
+			self::STATUS_NEW => self::ACTION_RESPOND,
+			self::STATUS_IN_WORK => self::ACTION_FAIL,
+		];
 
-				return self::ACTION_RESPOND;
-			
-			case self::STATUS_IN_WORK:
-
-				return self::ACTION_FAIL;
-		}
+		return $freelancer_actions[$this->current_status] ?? null;
 	}
 }
