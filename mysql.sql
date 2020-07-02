@@ -1,6 +1,5 @@
 CREATE TABLE `users` (
 	`user_id` INT NOT NULL AUTO_INCREMENT,
-	`user_is_customer` BOOLEAN NOT NULL DEFAULT true,
 	`user_name` varchar(45) NOT NULL,
 	`user_image_url` varchar(255),
 	`user_email` varchar(45) NOT NULL UNIQUE,
@@ -44,6 +43,7 @@ CREATE TABLE `socials` (
 	`social_id` INT NOT NULL AUTO_INCREMENT,
 	`social_name` varchar(45) NOT NULL,
 	`social_label` varchar(45) NOT NULL,
+	`social_value` varchar(45),
 	PRIMARY KEY (`social_id`)
 );
 
@@ -58,9 +58,9 @@ CREATE TABLE `tasks` (
 	`task_freelancer_id` INT,
 	`task_specialization_id` INT NOT NULL,
 	`task_title` varchar(45) NOT NULL,
-	`task_status` varchar(45) NOT NULL DEFAULT 'new',
+	`task_status` varchar(45) NOT NULL,
 	`task_price` INT,
-	`task_diedline` TIMESTAMP,
+	`task_deadline` TIMESTAMP,
 	`task_description` TEXT NOT NULL,
 	`task_lat` FLOAT,
 	`task_lng` FLOAT,
@@ -120,43 +120,42 @@ CREATE TABLE `messages` (
 	PRIMARY KEY (`message_id`)
 );
 
-ALTER TABLE `users` ADD CONSTRAINT `users_fk0` FOREIGN KEY (`user_city_id`) REFERENCES `cities`(`city_id`);
+ALTER TABLE `users` ADD CONSTRAINT `FK_cities_users` FOREIGN KEY (`user_city_id`) REFERENCES `cities`(`city_id`);
 
-ALTER TABLE `users_specializations` ADD CONSTRAINT `users_specializations_fk0` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`);
+ALTER TABLE `users_specializations` ADD CONSTRAINT `FK_specializations_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`);
 
-ALTER TABLE `users_specializations` ADD CONSTRAINT `users_specializations_fk1` FOREIGN KEY (`specialization_id`) REFERENCES `specializations`(`specialization_id`);
+ALTER TABLE `users_specializations` ADD CONSTRAINT `FK_users_specializations` FOREIGN KEY (`specialization_id`) REFERENCES `specializations`(`specialization_id`);
 
-ALTER TABLE `users_notifications` ADD CONSTRAINT `users_notifications_fk0` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`);
+ALTER TABLE `users_notifications` ADD CONSTRAINT `FK_notifications_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`);
 
-ALTER TABLE `users_notifications` ADD CONSTRAINT `users_notifications_fk1` FOREIGN KEY (`notification_id`) REFERENCES `notifications`(`notification_id`);
+ALTER TABLE `users_notifications` ADD CONSTRAINT `FK_users_notifications` FOREIGN KEY (`notification_id`) REFERENCES `notifications`(`notification_id`);
 
-ALTER TABLE `users_socials` ADD CONSTRAINT `users_socials_fk0` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`);
+ALTER TABLE `users_socials` ADD CONSTRAINT `FK_socials_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`);
 
-ALTER TABLE `users_socials` ADD CONSTRAINT `users_socials_fk1` FOREIGN KEY (`social_id`) REFERENCES `socials`(`social_id`);
+ALTER TABLE `users_socials` ADD CONSTRAINT `FK_users_socials` FOREIGN KEY (`social_id`) REFERENCES `socials`(`social_id`);
 
-ALTER TABLE `tasks` ADD CONSTRAINT `tasks_fk0` FOREIGN KEY (`task_customer_id`) REFERENCES `users`(`user_id`);
+ALTER TABLE `tasks` ADD CONSTRAINT `FK_customer_tasks` FOREIGN KEY (`task_customer_id`) REFERENCES `users`(`user_id`);
 
-ALTER TABLE `tasks` ADD CONSTRAINT `tasks_fk1` FOREIGN KEY (`task_freelancer_id`) REFERENCES `users`(`user_id`);
+ALTER TABLE `tasks` ADD CONSTRAINT `FK_freelancer_tasks` FOREIGN KEY (`task_freelancer_id`) REFERENCES `users`(`user_id`);
 
-ALTER TABLE `tasks` ADD CONSTRAINT `tasks_fk2` FOREIGN KEY (`task_specialization_id`) REFERENCES `specializations`(`specialization_id`);
+ALTER TABLE `tasks` ADD CONSTRAINT `FK_specializations_tasks` FOREIGN KEY (`task_specialization_id`) REFERENCES `specializations`(`specialization_id`);
 
-ALTER TABLE `tasks` ADD CONSTRAINT `tasks_fk3` FOREIGN KEY (`task_city_id`) REFERENCES `cities`(`city_id`);
+ALTER TABLE `tasks` ADD CONSTRAINT `FK_cities_tasks` FOREIGN KEY (`task_city_id`) REFERENCES `cities`(`city_id`);
 
-ALTER TABLE `responds` ADD CONSTRAINT `responds_fk0` FOREIGN KEY (`respond_author_id`) REFERENCES `users`(`user_id`);
+ALTER TABLE `responds` ADD CONSTRAINT `FK_users_responds` FOREIGN KEY (`respond_author_id`) REFERENCES `users`(`user_id`);
 
-ALTER TABLE `responds` ADD CONSTRAINT `responds_fk1` FOREIGN KEY (`respond_task_id`) REFERENCES `tasks`(`task_id`);
+ALTER TABLE `responds` ADD CONSTRAINT `FK_tasks_responds` FOREIGN KEY (`respond_task_id`) REFERENCES `tasks`(`task_id`);
 
-ALTER TABLE `reviews` ADD CONSTRAINT `reviews_fk0` FOREIGN KEY (`review_author_id`) REFERENCES `users`(`user_id`);
+ALTER TABLE `reviews` ADD CONSTRAINT `FK_author_reviews` FOREIGN KEY (`review_author_id`) REFERENCES `users`(`user_id`);
 
-ALTER TABLE `reviews` ADD CONSTRAINT `reviews_fk1` FOREIGN KEY (`review_addressee_id`) REFERENCES `users`(`user_id`);
+ALTER TABLE `reviews` ADD CONSTRAINT `FK_addressee_reviews` FOREIGN KEY (`review_addressee_id`) REFERENCES `users`(`user_id`);
 
-ALTER TABLE `reviews` ADD CONSTRAINT `reviews_fk2` FOREIGN KEY (`review_task_id`) REFERENCES `tasks`(`task_id`);
+ALTER TABLE `reviews` ADD CONSTRAINT `FK_tasks_reviews` FOREIGN KEY (`review_task_id`) REFERENCES `tasks`(`task_id`);
 
-ALTER TABLE `attachments` ADD CONSTRAINT `attachments_fk0` FOREIGN KEY (`attachment_task_id`) REFERENCES `tasks`(`task_id`);
+ALTER TABLE `attachments` ADD CONSTRAINT `FK_tasks_attachments` FOREIGN KEY (`attachment_task_id`) REFERENCES `tasks`(`task_id`);
 
-ALTER TABLE `attachments` ADD CONSTRAINT `attachments_fk1` FOREIGN KEY (`attachment_user_id`) REFERENCES `users`(`user_id`);
+ALTER TABLE `attachments` ADD CONSTRAINT `FK_users_attachments` FOREIGN KEY (`attachment_user_id`) REFERENCES `users`(`user_id`);
 
-ALTER TABLE `messages` ADD CONSTRAINT `messages_fk0` FOREIGN KEY (`message_task_id`) REFERENCES `tasks`(`task_id`);
+ALTER TABLE `messages` ADD CONSTRAINT `FK_tasks_messages` FOREIGN KEY (`message_task_id`) REFERENCES `tasks`(`task_id`);
 
-ALTER TABLE `messages` ADD CONSTRAINT `messages_fk1` FOREIGN KEY (`message_author_id`) REFERENCES `users`(`user_id`);
-
+ALTER TABLE `messages` ADD CONSTRAINT `FK_users_messages` FOREIGN KEY (`message_author_id`) REFERENCES `users`(`user_id`);
